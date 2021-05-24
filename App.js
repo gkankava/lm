@@ -1,21 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from "react";
+import { StatusBar, View, Text } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import jwtDecode from "jwt-decode";
+
+import { userProvider } from "./store/user/auth";
+import { fetchUserData } from "./store/actions/user";
+import { getData } from "./src/handlers/localStorage";
+
+import AuthStack from "./src/stacks/AuthStack";
+import MainStack from "./src/stacks/MainStack";
 
 export default function App() {
+  const { currentUser, setCurrentUser, logOut } = userProvider();
+
+  useEffect(() => {
+    // logOut();
+    getData("jwtToken").then((token) => {
+      if (token) {
+        let id = jwtDecode(token).username;
+        try {
+          fetchUserData(id, setCurrentUser);
+        } catch (error) {
+          console.log(error);
+          setCurrentUser(false, null);
+        }
+      }
+    });
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <StatusBar
+        barStyle="light-content"
+        translucent={true}
+        backgroundColor="transparent"
+      />
+      {currentUser.isAuthenticated && currentUser.user.verified ? (
+        <MainStack />
+      ) : (
+        <AuthStack />
+      )}
+      <Toast ref={(ref) => Toast.setRef(ref)} />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
