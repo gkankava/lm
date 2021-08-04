@@ -7,9 +7,6 @@ const TransactionList = ({
     { date: "05 apr 2021", card: "4587", plan: "Traveler", price: "9.99" },
     { date: "05 apr 2021", card: "4587", plan: "Walker", price: "9.99" },
     { date: "05 apr 2021", card: "4587", plan: "Traveler", price: "9.99" },
-    { date: "05 apr 2021", card: "4587", plan: "Traveler", price: "9.99" },
-    { date: "05 apr 2021", card: "4587", plan: "Explorer", price: "9.99" },
-    { date: "05 apr 2021", card: "4587", plan: "Walker", price: "9.99" },
   ],
 }) => {
   let arr = list.map((i, k) => (

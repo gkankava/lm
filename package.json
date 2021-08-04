@@ -16,9 +16,12 @@
     "axios": "^0.21.1",
     "card-validator": "^8.1.0",
     "expo": "~41.0.1",
+    "expo-av": "~9.1.2",
     "expo-camera": "~11.0.2",
     "expo-image-picker": "~10.1.4",
     "expo-linear-gradient": "~9.1.0",
+    "expo-media-library": "~12.0.2",
+    "expo-permissions": "~12.0.1",
     "expo-sharing": "~9.1.2",
     "expo-status-bar": "~1.0.4",
     "formik": "^2.2.6",
@@ -41,13 +44,11 @@
     "react-native-screens": "~3.0.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-sticky-parallax-header": "^0.4.0",
+    "react-native-stopwatch-timer": "0.0.21",
     "react-native-toast-message": "^1.4.9",
     "react-native-web": "^0.16.2",
-    "socket.io-client": "^4.0.1",
-    "zustand": "^3.4.2",
-    "expo-av": "~9.1.2",
-    "expo-permissions": "~12.0.1",
-    "expo-media-library": "~12.0.2"
+    "socket.io-client": "^4.1.2",
+    "zustand": "^3.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

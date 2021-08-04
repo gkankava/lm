@@ -27,9 +27,6 @@ const CardsSlider = ({
       onPress={() => {
         setState({ editable: false, el: null });
       }}
-      onLongPress={() => {
-        setState({ editable: true, el: key });
-      }}
     >
       <View style={{}}>
         <LinearGradient
@@ -46,29 +43,6 @@ const CardsSlider = ({
             <Text style={styles.title}>{item.name}</Text>
             <Text style={styles.subTitle}>{item.num}</Text>
           </View>
-          <TouchableOpacity
-            style={{
-              alignSelf: "flex-start",
-              backgroundColor: "white",
-              paddingHorizontal: 5,
-              paddingVertical: 10,
-              position: "absolute",
-              top: 10,
-              right: 10,
-              display:
-                state.editable === true && state.el === key ? "flex" : "none",
-              flexDirection: "row",
-              alignItems: "center",
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: "red",
-            }}
-          >
-            <EvilIcons name="trash" size={20} color="red" />
-            <Text style={{ color: "red", marginLeft: 5, marginRight: 10 }}>
-              delete
-            </Text>
-          </TouchableOpacity>
         </LinearGradient>
       </View>
     </TouchableOpacity>

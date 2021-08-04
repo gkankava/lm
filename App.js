@@ -5,6 +5,7 @@ import Toast from "react-native-toast-message";
 import jwtDecode from "jwt-decode";
 
 import { userProvider } from "./store/user/auth";
+import { socketProvider } from "./store/socket/socket";
 import { fetchUserData } from "./store/actions/user";
 import { getData } from "./src/handlers/localStorage";
 
@@ -13,6 +14,7 @@ import MainStack from "./src/stacks/MainStack";
 
 export default function App() {
   const { currentUser, setCurrentUser, logOut } = userProvider();
+  const { socket, join, disconnect } = socketProvider();
 
   useEffect(() => {
     // logOut();
@@ -27,7 +29,20 @@ export default function App() {
         }
       }
     });
+    return () => {
+      disconnect(socket);
+    };
   }, []);
+
+  useEffect(() => {
+    if (currentUser.isAuthenticated && currentUser.user.verified) {
+      const { name, room } = {
+        name: currentUser.user.username,
+        room: `${currentUser.user.username}-chat-room`,
+      };
+      join(socket, name, room);
+    }
+  }, [currentUser]);
 
   return (
     <NavigationContainer>

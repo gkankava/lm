@@ -145,7 +145,7 @@ export default function CameraMod({ status, setStatus, setMedia, send }) {
                   fontWeight: "100",
                 }}
               >
-                Send{"  "}
+                Send
               </Text>
               <FontAwesome name="send" size={35} color="#85C8D5" />
             </TouchableOpacity>

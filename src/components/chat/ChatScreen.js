@@ -1,37 +1,99 @@
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
-  Text,
-  View,
   KeyboardAvoidingView,
   Platform,
-  Dimensions,
+  StatusBar,
+  Image,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { Audio } from "expo-av";
 
 import { userProvider } from "../../../store/user/auth";
+import { socketProvider } from "../../../store/socket/socket";
+
+import { fetchChat } from "../../../store/actions/chat";
 
 import ChatScreenHeader from "./header/ChatScreenHeader";
 import ChatArea from "./ChatArea";
 import ChatInputArea from "./ChatInputArea";
 
-const height = Dimensions.get("screen").height - 100;
+const ENDPOINT = "http://134.209.239.1";
 
 const ChatScreen = () => {
   const { currentUser } = userProvider();
+  const [isFetching, setIsFetching] = useState(false);
+  const [messageList, setMessageList] = useState([]);
   const [message, setMessage] = useState("");
+
   const [media, setMedia] = useState("");
   const [isRecording, setIsRecording] = useState(false);
 
+  const [progress, setProgress] = useState(0);
+
+  const { socket } = socketProvider();
+
+  useEffect(() => {
+    socket.on("message", (message) => {
+      setMessageList([
+        {
+          ...message,
+          _id: message.text + Math.random().toString().substr(2, 8),
+        },
+        ...messageList,
+      ]);
+    });
+  }, [messageList]);
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status } = await Audio.requestPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need Audio permissions to make this work!");
+        }
+      }
+    })();
+    fetchChat(setIsFetching, currentUser.user.username, setMessageList);
+  }, []);
+
+  const pp = (
+    <Image
+      source={{
+        uri: ENDPOINT + currentUser.user.profilePicture,
+      }}
+      style={{ flex: 1, width: 40, height: 40, borderRadius: 50 }}
+    />
+  );
+
   return (
-    // <View style={styles.container}>
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       keyboardVerticalOffset={0}
     >
+      <StatusBar
+        barStyle="dark-content"
+        translucent={true}
+        backgroundColor="transparent"
+      />
       <>
         <ChatScreenHeader user={currentUser} />
-        <ChatArea />
+        <ChatArea
+          messageList={messageList}
+          name={currentUser.user.username}
+          pP={pp}
+          isFetching={isFetching}
+        />
         <ChatInputArea
           message={message}
           setMessage={setMessage}
@@ -39,10 +101,10 @@ const ChatScreen = () => {
           setMedia={setMedia}
           isRecording={isRecording}
           setIsRecording={setIsRecording}
+          setProgress={setProgress}
         />
       </>
     </KeyboardAvoidingView>
-    // </View>
   );
 };
 
